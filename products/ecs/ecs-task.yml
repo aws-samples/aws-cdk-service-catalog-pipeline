@@ -1,0 +1,123 @@
+Description: Container Fargate Task Definition
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  ECRImageURI:
+    Type: String
+    Description: URI for the container from Amazon Elastic Container Registry.
+  ContainerDefinitionName:
+    Type: String
+    Description: This will set the Task and Container Definition name in Fargate.
+  ContainerPort:
+    Type: Number
+    Description: port number exposed from the container image.
+    Default: 80
+  ContainerSize:
+    Type: String
+    Description: Size of container for Fargate task.
+    Default: Small
+    AllowedValues:
+      - XSmall
+      - Small
+      - Medium
+      - Large
+  ClusterName:
+    Type: String
+    Description: Name of the ECS Cluster
+Mappings:
+  MapContainerSize:
+    XSmall:
+      cpu: "256"
+      mem: "1024"
+    Small:
+      cpu: "512"
+      mem: "1024"
+    Medium:
+      cpu: "1024"
+      mem: "2048"
+    Large:
+      cpu: "4096"
+      mem: "8192"
+Resources:
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [ecs-tasks.amazonaws.com]
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+        - PolicyName: AmazonECSTaskExecutionRolePolicy
+          PolicyDocument:
+            Statement:
+            - Effect: Allow
+              Action:
+                # Allow the ECS Tasks to download images from ECR
+                - 'ecr:GetAuthorizationToken'
+                - 'ecr:BatchCheckLayerAvailability'
+                - 'ecr:GetDownloadUrlForLayer'
+                - 'ecr:BatchGetImage'
+                - 'kms:*'
+                - 'secretsmanager:*'
+                - 'ssm:*'
+                - 's3:*'
+                - 'ecr:*'
+                - 'ecs:*'
+                - 'ec2:*'
+                # Allow the ECS tasks to upload logs to CloudWatch
+                - 'logs:CreateLogStream'
+                - 'logs:PutLogEvents'
+                - 'logs:CreateLogGroup'
+                - 'logs:DescribeLogStreams'                
+              Resource: '*'
+  TaskLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Sub: /ecs/${ContainerDefinitionName}
+      RetentionInDays: 30
+  taskdefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ExecutionRoleArn:
+        Ref: ECSTaskExecutionRole
+      RequiresCompatibilities:
+        - FARGATE
+      Memory:
+        Fn::FindInMap:
+          - MapContainerSize
+          - Ref: ContainerSize
+          - mem
+      Family:
+        Ref: ContainerDefinitionName
+      NetworkMode: awsvpc
+      Cpu:
+        Fn::FindInMap:
+          - MapContainerSize
+          - Ref: ContainerSize
+          - cpu
+      ContainerDefinitions:
+        - PortMappings:
+            - ContainerPort:
+                Ref: ContainerPort
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group:
+                Ref: TaskLogGroup
+              awslogs-region:
+                Ref: AWS::Region
+              awslogs-stream-prefix: ecs
+          Environment:
+            - Name: AWS_REGION
+              Value:
+                Ref: AWS::Region
+          Image:
+            Ref: ECRImageURI
+          Name:
+            Ref: ContainerDefinitionName
+      Tags:
+        - Key: Name
+          Value: !Ref 'ClusterName'      

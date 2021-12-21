@@ -1,0 +1,15 @@
+attrs
+aws-cdk.core
+aws-cdk.assertions
+aws-cdk.aws-ssm
+aws-cdk.aws_servicecatalog
+aws-cdk.aws-cloudformation
+aws-cdk.aws-cloudfront
+aws-cdk.aws-cloudwatch
+aws-cdk.aws-codebuild
+aws-cdk.aws-codecommit
+aws-cdk.aws-codedeploy
+aws-cdk.aws-codeguruprofiler
+aws-cdk.aws-codepipeline
+aws-cdk.aws-codepipeline-actions
+aws-cdk.pipelines
