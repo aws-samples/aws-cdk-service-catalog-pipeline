@@ -4,20 +4,26 @@ The purpose of this repository is to demo how can we analyze and securize our Te
 
 **Requirements**
 
-- CDK installed: Getting started with the AWS CDK (Ensure the minimal version 1.103.0 to make it works)
+- CDK installed: Getting started with the AWS CDK (Ensure a minimal version 1.103.0 to make it works)
 - AWS Account
 - IAM User or IAM role with permissions to create AWS Resources.
 - Git installed: Git installation
-- Clone this repo! : git clone https://github.com/aws-samples/aws-cdk-tfsec
+- Clone this repo! : git clone https://github.com/aws-samples/aws-cdk-service-catalog-pipeline/
 - Python CDK required libraries: (install with pip install -r requirements.txt)
 
 **Pre-Requisites**
 - Add the value of the hub account to the [cdk.json](cdk.json) hub_account
 
-- Create an SSM parameter string list with the accounts to share for your different Portfolios. Add this value to the [cdk.json](cdk.json) value. For example: /service-catalog/shared-accounts-ecs would be for shared_accounts_ecs
-
-
-- Modify the [cdk.json](cdk.json) for the pipeline_account id and region to especify where in which environment you want to deploy this demo.
+- Modify the [cdk.json](cdk.json) for the pipeline_account id and region to especify where in which environment you want to deploy this demo
+- Modify other attributes in the [cdk.json](cdk.json) to share your portfolio to other accounts. Also shares with roles, groups or users who are going to operate and run the portfolio products:: 
+   - "shared_accounts_ecs":["012345678901","012345678902"],
+   - "shared_accounts_storage":["012345678901","012345678902"],
+   - "roles":["arn:aws:iam::012345678901:role/awsomerole"],
+   - "users":["arn:aws:iam::012345678901:user/awsomeuser"],
+   - "groups":["arn:aws:iam::012345678901:group/awsomegroup],
+   - "hub_account":"012345678901",
+   - "pipeline_account":"012345678901",
+   - "region":"eu-west-1"
 
 ## Architecture
 ![service-catalog-architecture](images/cicd_service_catalog.png)
@@ -28,7 +34,7 @@ Clone the repo in your local machine. Then, bootstrap and deploy the CDK stack f
 
 ```
 git clone https://github.com/aws-samples/cdk-service-catalog-pipeline
-cd aws-cdk-service-catalog
+cd aws-cdk-service-catalog-pipeline
 pip install -r requirements.txt
 cdk bootstrap aws://account_id/eu-west-1
 cdk deploy
@@ -46,7 +52,6 @@ git add .
 git commit -am "First commit"
 git push --set-upstream origin main
 ```
-
 
 
 ![cicd_pipeline](images/cicd_pipeline.png)
