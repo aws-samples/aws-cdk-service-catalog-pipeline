@@ -4,7 +4,7 @@ The purpose of this repository is to demo how can we analyze and securize our Te
 
 **Requirements**
 
-- CDK installed: Getting started with the AWS CDK (Ensure a minimal version 1.103.0 to make it works)
+- CDK v1 installed: Getting started with the AWS CDK (Ensure a minimal version 1.103.0 to make it works)
 - AWS Account
 - IAM User or IAM role with permissions to create AWS Resources.
 - Git installed: Git installation
