@@ -1,6 +1,6 @@
 # CI/CD for Service Catalog products using AWS CodeCommit, AWS CodePipeline, AWS CodeBuild with CDK
 
-The purpose of this repository is to demo how can we analyze and securize our Terraform code using a CI/CD Pipeline with a fully AWS services managed.
+The purpose of this repository is to demo how can we manage Service Catalog Products using CDK.
 
 **Requirements**
 
