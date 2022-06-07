@@ -1,28 +1,31 @@
 from aws_cdk import (
+    Stack,
+    CfnParameter,
+    Tags,
     aws_servicecatalog as servicecatalog,
     aws_iam as iam,
     aws_s3 as s3,
     aws_ec2 as ec2,
-    aws_efs as efs,
-    core as cdk
+    aws_efs as efs
 )
+from constructs import Construct
 import sys
 
 class S3(servicecatalog.ProductStack):
     def __init__(self, scope, id):
         super().__init__(scope, id)
 
-        bucket_name = cdk.CfnParameter(self, "bucketName", type="String", description="The name of the S3 Bucket")
-        versioned_enable = cdk.CfnParameter(self, "versionedEnable", type="String",default="False",allowed_values=["False","True"],description="Whether this bucket should have versioning turned on or not")
+        bucket_name = CfnParameter(self, "bucketName", type="String", description="The name of the S3 Bucket")
+        versioned_enable = CfnParameter(self, "versionedEnable", type="String",default="False",allowed_values=["False","True"],description="Whether this bucket should have versioning turned on or not")
 
         s3.Bucket(self,"S3Bucket_template",bucket_name=bucket_name.value_as_string,versioned=bool(versioned_enable.value_as_string))
         
         # add more features into your S3 Bucket following the CDK doc: https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_s3/README.html
-        cdk.Tags.of(self).add("key", "value")
+        Tags.of(self).add("key", "value")
 
-class CdkServiceCatalogStorageStack(cdk.Stack):
+class CdkServiceCatalogStorageStack(Stack):
 
-    def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         accounts = self.node.try_get_context("shared_accounts_storage")
@@ -73,4 +76,4 @@ class CdkServiceCatalogStorageStack(cdk.Stack):
         portfolio.add_product(s3_bucket)
 
         # General tags applied to all resources created on this scope (self)
-        cdk.Tags.of(self).add("key", "value")
+        Tags.of(self).add("key", "value")

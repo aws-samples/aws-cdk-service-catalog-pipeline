@@ -33,7 +33,7 @@ The purpose of this repository is to demo how can we manage Service Catalog Prod
 Clone the repo in your local machine. Then, bootstrap and deploy the CDK stack following the next steps
 
 ```
-git clone https://github.com/aws-samples/cdk-service-catalog-pipeline
+git clone https://github.com/aws-samples/aws-cdk-service-catalog-pipeline
 cd aws-cdk-service-catalog-pipeline
 pip install -r requirements.txt
 cdk bootstrap aws://account_id/eu-west-1
@@ -47,7 +47,7 @@ cd ..
 git clone https://git-codecommit.eu-west-1.amazonaws.com/v1/repos/service-catalog-repo
 cd service-catalog-repo
 git checkout -b main
-cp -aR ../cdk-service-catalog-pipeline/* .
+cp -aR ../aws-cdk-service-catalog-pipeline/* .
 git add .
 git commit -am "First commit"
 git push --set-upstream origin main
