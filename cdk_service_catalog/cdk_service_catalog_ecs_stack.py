@@ -1,11 +1,14 @@
 from aws_cdk import (
+    Stack,
+    CfnParameter,
+    Tags,
     aws_servicecatalog as servicecatalog,
     aws_iam as iam,
     aws_s3 as s3,
     aws_ecs as ecs,
-    aws_ssm as ssm,
-    core as cdk
+    aws_ssm as ssm
 )
+from constructs import Construct
 import sys
 
 
@@ -14,18 +17,18 @@ class ECSCluster(servicecatalog.ProductStack):
         super().__init__(scope, id)
 
         # Parameters for the Product Template
-        cluster_name = cdk.CfnParameter(self, "clusterName", type="String", description="The name of the ECS cluster")
-        container_insights_enable = cdk.CfnParameter(self, "container_insights", type="String",default="False",allowed_values=["False","True"],description="Enable Container Insights")
-        vpc = cdk.CfnParameter(self, "vpc", type="AWS::EC2::VPC::Id", description="VPC")
+        cluster_name = CfnParameter(self, "clusterName", type="String", description="The name of the ECS cluster")
+        container_insights_enable = CfnParameter(self, "container_insights", type="String",default="False",allowed_values=["False","True"],description="Enable Container Insights")
+        vpc = CfnParameter(self, "vpc", type="AWS::EC2::VPC::Id", description="VPC")
 
         ecs.Cluster(self,"ECSCluster_template",enable_fargate_capacity_providers=True,cluster_name=cluster_name.value_as_string,container_insights=bool(container_insights_enable.value_as_string),vpc=vpc)
         ## add more features into your ECS cluster following the CDK doc: https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_ecs/README.html
-        cdk.Tags.of(self).add("key", "value")
+        Tags.of(self).add("key", "value")
 
 
-class CdkServiceCatalogECSStack(cdk.Stack):
+class CdkServiceCatalogECSStack(Stack):
 
-    def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         accounts = self.node.try_get_context("shared_accounts_ecs")
@@ -90,4 +93,4 @@ class CdkServiceCatalogECSStack(cdk.Stack):
         portfolio.add_product(ecs_cluster)
 
         # General tags applied to all resources created on this scope (self)
-        cdk.Tags.of(self).add("key", "value")
+        Tags.of(self).add("key", "value")
