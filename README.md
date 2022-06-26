@@ -40,7 +40,7 @@ cdk bootstrap aws://account_id/eu-west-1
 cdk deploy
 ```
 
-The infrastructure creation takes around 3-5 minutes due the AWS CodePipelines and referenced repository creation. Once the CDK has deployed the infrastructure, clone the new AWS CodeCommit repos that have already been created and push this code into the repo. You can get the repository URL to push the code from the outputs of the stack that we just created. Connect(https://docs.aws.amazon com/codecommit/latest/userguide/how-to-connect.html), commit, and push code to this repository as described here:
+The infrastructure creation takes around 3-5 minutes due the AWS CodePipelines and referenced repository creation. Once the CDK has deployed the infrastructure, clone the new AWS CodeCommit repos that have already been created and push this code into the repo. You can get the repository URL to push the code from the outputs of the stack that we just created. [Connect](https://docs.aws.amazon.com/codecommit/latest/userguide/how-to-connect.html), commit, and push code to this repository as described here:
 
 ```
 cd ..
